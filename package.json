@@ -1,0 +1,31 @@
+{
+  "name": "webpack-csp-html-linter",
+  "version": "1.0.0",
+  "description": "A Web pack plugin to lint your HTML for Content Security Policy Violations.",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.mjs",
+    "test": "jest index.spec.js"
+  },
+  "files": [
+    "index.js",
+    "package.json"
+  ],
+  "keywords": [
+    "webpack",
+    "webpack plugin",
+    "csp-html-linter",
+    "Content Security Policy Linter",
+    "CSP HTML Linter"
+  ],
+  "author": "Maurice Downes (https://advancedfrontends.com/)",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "csp-html-linter": "^1.0.3"
+  }
+}
