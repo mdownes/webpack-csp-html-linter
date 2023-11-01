@@ -23,6 +23,18 @@ class CspHtmlLinterWebpackPlugin {
                         const filePath = module.resource;
                         const extensions = this.options.extensions || [];
 
+                        function filterExclusion(filePath, exclusions) {
+                            //console.log(filePath)
+                            if (exclusions) {
+                                for (let i = 0; i < exclusions.length; i++) {
+                                    if (filePath.includes(exclusions[i])) {
+                                        return false;
+                                    }
+                                }
+                            }
+                            return true;
+                        }
+
                         function stringContainsArrayItem(str, arr) {
                             for (let i = 0; i < arr.length; i++) {
                                 if (str.includes(arr[i])) {
@@ -32,7 +44,7 @@ class CspHtmlLinterWebpackPlugin {
                             return false;
                         }
 
-                        if (stringContainsArrayItem(filePath, extensions)) {
+                        if (stringContainsArrayItem(filePath, extensions) && filterExclusion(filePath, this.options.exclusions)) {
                             let result = cspHtmlLinter.parse(sourceCode, this.options);
                             if (result.length > 0) {
                                 violations = violations.concat(mapViolations(result, filePath));
