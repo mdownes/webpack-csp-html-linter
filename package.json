@@ -9,7 +9,9 @@
   },
   "files": [
     "index.js",
-    "package.json"
+    "package.json",
+    "index.d.ts",
+    "README.md"
   ],
   "keywords": [
     "webpack",

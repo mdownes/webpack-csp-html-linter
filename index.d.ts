@@ -1,0 +1,1 @@
+declare module 'webpack-csp-html-linter';
