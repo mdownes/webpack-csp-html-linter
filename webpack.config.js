@@ -9,9 +9,9 @@ export default {
   },
   plugins: [
     new CspHtmlLinterWebpackPlugin({
-      exclude: ['**/nestedfolder/**'],
-      include: ['demo/**/*.js', 'demo/**/*.ts']
-
+      // extensions: ['.js'],
+      exclude: 'nestedfolder',
+      include: 'demo/src/**/*.html'
       //  allowInlineStyles: true,
       //  allowInlineJs: true,
       //  allowStyleTagWithoutNonce: true,

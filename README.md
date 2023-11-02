@@ -23,7 +23,7 @@ export default {
   },
   plugins: [
     new CspHtmlLinterWebpackPlugin({
-      extensions: ['.html']
+      include['src/**/*.html']
     })
   ]
 };
@@ -43,9 +43,8 @@ export default {
   },
   plugins: [
     new CspHtmlLinterWebpackPlugin({
-      extensions: ['.html', '.js'],
       exclude:['node_modules', 'somefolder'],
-      include:['src'],
+      include:['src/**/*.html', 'src/**/*.js'],
       allowInlineStyles: true,
       allowInlineJs: true,
       allowStyleTagWithoutNonce: true,

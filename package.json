@@ -1,6 +1,6 @@
 {
   "name": "webpack-csp-html-linter",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A webpack plugin to lint your HTML for Content Security Policy Violations.",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,7 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "csp-html-linter": "^1.0.3"
+    "csp-html-linter": "^1.0.3",
+    "glob": "^10.3.10"
   }
 }

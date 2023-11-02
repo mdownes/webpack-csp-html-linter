@@ -1,8 +1,9 @@
 const pluginName = 'CspHtmlLinterWebpackPlugin';
 const cspHtmlLinter = require('csp-html-linter');
+const glob = require('glob');
 
 let defaultOptions = {
-    extensions: ['.html'],
+    include: '**/**/.html'
 };
 class CspHtmlLinterWebpackPlugin {
 
@@ -12,6 +13,7 @@ class CspHtmlLinterWebpackPlugin {
 
     apply(compiler) {
         let violations = [];
+        const files = getFiles(this.options);
 
         compiler.hooks.compilation.tap(pluginName, (compilation) => {
             compilation.hooks.additionalAssets.tapAsync(pluginName, (callback) => {
@@ -25,10 +27,9 @@ class CspHtmlLinterWebpackPlugin {
 
                         // You can access the module's resource path with module.resource
                         const filePath = module.resource;
-                        // const extensions = this.options.extensions || [];
 
-                        //if (stringContainsArrayItem(filePath, extensions) && filterExclusion(filePath, this.options.exclude) && filterInclusion(filePath, this.options.include)) {
-                        if (filterFilePath(filePath, this.options)) {
+                        if (files.includes(filePath)) {
+
                             let result = cspHtmlLinter.parse(sourceCode, this.options);
                             if (result.length > 0) {
                                 violations = violations.concat(mapViolations(result, filePath));
@@ -50,32 +51,6 @@ class CspHtmlLinterWebpackPlugin {
     }
 }
 
-function filterFilePath(filePath, options) {
-    function filterExclusion(filePath, exclusions) {
-        if (exclusions) {
-            for (let i = 0; i < exclusions.length; i++) {
-                if (filePath.includes(exclusions[i])) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    function filterFilePathWithArray(filePath, items) {
-        if (!items) { return true };
-        for (let i = 0; i < items.length; i++) {
-            if (filePath.includes(items[i])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    const result = filterFilePathWithArray(filePath, options.extensions) && filterExclusion(filePath, options.exclude) && filterFilePathWithArray(filePath, options.include);
-    return result;
-}
-
 function mapViolations(messages, filePath) {
     let violations = [];
     messages.forEach((v) => {
@@ -83,6 +58,10 @@ function mapViolations(messages, filePath) {
     });
 
     return violations;
+}
+
+function getFiles(options) {
+    return glob.sync(options.include, { ignore: options.exclude, absolute: true })
 }
 
 module.exports = CspHtmlLinterWebpackPlugin;
