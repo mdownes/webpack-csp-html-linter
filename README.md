@@ -23,7 +23,7 @@ export default {
   },
   plugins: [
     new CspHtmlLinterWebpackPlugin({
-      include['src/**/*.html']
+      include: ['src/**/*.html']
     })
   ]
 };
