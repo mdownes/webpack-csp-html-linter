@@ -1,9 +1,13 @@
 const pluginName = 'CspHtmlLinterWebpackPlugin';
 const cspHtmlLinter = require('csp-html-linter');
+
+let defaultOptions = {
+    extensions: ['.html'],
+};
 class CspHtmlLinterWebpackPlugin {
 
     constructor(options = {}) {
-        this.options = options;
+        this.options = { ...defaultOptions, ...options };
     }
 
     apply(compiler) {
@@ -21,30 +25,10 @@ class CspHtmlLinterWebpackPlugin {
 
                         // You can access the module's resource path with module.resource
                         const filePath = module.resource;
-                        const extensions = this.options.extensions || [];
+                        // const extensions = this.options.extensions || [];
 
-                        function filterExclusion(filePath, exclusions) {
-                            //console.log(filePath)
-                            if (exclusions) {
-                                for (let i = 0; i < exclusions.length; i++) {
-                                    if (filePath.includes(exclusions[i])) {
-                                        return false;
-                                    }
-                                }
-                            }
-                            return true;
-                        }
-
-                        function stringContainsArrayItem(str, arr) {
-                            for (let i = 0; i < arr.length; i++) {
-                                if (str.includes(arr[i])) {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        }
-
-                        if (stringContainsArrayItem(filePath, extensions) && filterExclusion(filePath, this.options.exclusions)) {
+                        //if (stringContainsArrayItem(filePath, extensions) && filterExclusion(filePath, this.options.exclude) && filterInclusion(filePath, this.options.include)) {
+                        if (filterFilePath(filePath, this.options)) {
                             let result = cspHtmlLinter.parse(sourceCode, this.options);
                             if (result.length > 0) {
                                 violations = violations.concat(mapViolations(result, filePath));
@@ -64,6 +48,32 @@ class CspHtmlLinterWebpackPlugin {
             }
         });
     }
+}
+
+function filterFilePath(filePath, options) {
+    function filterExclusion(filePath, exclusions) {
+        if (exclusions) {
+            for (let i = 0; i < exclusions.length; i++) {
+                if (filePath.includes(exclusions[i])) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function filterFilePathWithArray(filePath, items) {
+        if (!items) { return true };
+        for (let i = 0; i < items.length; i++) {
+            if (filePath.includes(items[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    const result = filterFilePathWithArray(filePath, options.extensions) && filterExclusion(filePath, options.exclude) && filterFilePathWithArray(filePath, options.include);
+    return result;
 }
 
 function mapViolations(messages, filePath) {
